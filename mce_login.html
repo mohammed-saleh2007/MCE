@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="mce_style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <script>
+        const users = [
+            { email: 'mohammadhafez7227@gmail.com', password: '123456' },
+            { email: 'mohammadhafez722@gmail.com', password: 'mohammad1234567890' }
+        ];
+
+        function handleLogin(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Check if the user exists and the password matches
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                alert('Login successful');
+                // Redirect to another website
+                window.location.href = 'mainsite.html'; // Replace with your desired URL
+            } else {
+                alert('Invalid email or password');
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <h2>Login</h2>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

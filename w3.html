@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Press Duration</title>
+    <style>
+        #pressable {
+            width: 200px;
+            height: 100px;
+            background-color: lightblue;
+            text-align: center;
+            line-height: 100px;
+            border: 2px solid blue;
+            cursor: pointer;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #timeDisplay {
+            margin-top: 10px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="pressable">Muscle Emulator</div>
+    <div id="timeDisplay">Time that has high pressure detected: 0s</div>
+    <div id="message"></div>
+
+    <script>
+        let pressStartTime;
+        let intervalId;
+        const pressableElement = document.getElementById('pressable');
+        const messageElement = document.getElementById('message');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const durationThreshold = 10000; // Duration in milliseconds (10000 ms = 10 seconds)
+
+        function updateElapsedTime() {
+            if (pressStartTime) {
+                const currentTime = Date.now();
+                const elapsedTime = currentTime - pressStartTime;
+                const seconds = Math.floor(elapsedTime / 1000);
+                timeDisplay.textContent = `Time that has high pressure detected: ${seconds}s`;
+
+                // Check if the elapsed time exceeds the 10-second threshold
+                if (elapsedTime >= durationThreshold) {
+                    messageElement.textContent = 'SPETTER METER IS WORKING';
+                }
+            }
+        }
+
+        // Event listener for mouse down (start pressing)
+        pressableElement.addEventListener('mousedown', () => {
+            pressStartTime = Date.now();
+            messageElement.textContent = ''; // Clear message on press start
+            intervalId = setInterval(updateElapsedTime, 1000); // Update elapsed time every second
+        });
+
+        // Event listener for mouse up (stop pressing)
+        pressableElement.addEventListener('mouseup', () => {
+            clearInterval(intervalId); // Stop updating the elapsed time
+            const pressEndTime = Date.now();
+            const pressDuration = pressEndTime - pressStartTime;
+
+            if (pressDuration >= durationThreshold) {
+                messageElement.textContent = 'SPETTER METER IS WORKING';
+            } else {
+                messageElement.textContent = 'Normal...';
+            }
+
+            // Reset state
+            pressStartTime = null;
+            timeDisplay.textContent = 'Time that has high pressure detected: 0s';
+        });
+
+        // Optional: Handle cases where mouse leaves the element while pressing
+        pressableElement.addEventListener('mouseleave', () => {
+            if (pressStartTime) {
+                clearInterval(intervalId); // Stop updating the elapsed time
+                const pressEndTime = Date.now();
+                const pressDuration = pressEndTime - pressStartTime;
+
+                if (pressDuration >= durationThreshold) {
+                    messageElement.textContent = 'SPETTER METER IS WORKING';
+                } else {
+                    messageElement.textContent = 'Normal...';
+                }
+
+                // Reset state
+                pressStartTime = null;
+                timeDisplay.textContent = 'Time that has high pressure detected: 0s';
+            }
+        });
+    </script>
+</body>
+</html>
